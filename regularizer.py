@@ -18,7 +18,7 @@ class Regularizer(ABC):
 
     @abstractmethod
     def scaled_prox_mapping(self, b, z, g, lambda_):
-        '''Return argmin_x \sum_i [(1/2)bi*(xi-zi)^2 + gi*xi] + lambda*R(x)'''
+        '''Return argmin_x sum_i [(1/2)bi*(xi-zi)^2 + gi*xi] + lambda*R(x)'''
         pass
 
     @abstractmethod

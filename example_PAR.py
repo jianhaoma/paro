@@ -54,7 +54,7 @@ R_nonconvex = NONCONVEX_PAR()
 # set th regularization parameter
 lam = 0.05
 
-algos = ['STE'] # list of algorithms to run
+algos = ['STE', 'PG'] # list of algorithms to run
 loggers = [] # store the solution loggers
 
 for algo in algos:
