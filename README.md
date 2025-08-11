@@ -2,7 +2,7 @@
 
 This repository provides reference implementations for solving problems of the form
 
-$$\min_{x\in\mathbb{R}^d} f(x) + \lambda\,R(x),$$
+$$\min_{x\in\mathbb{R}^d} f(x) + \lambda R(x),$$
 
 where `f` is a loss function and `R` is a **piecewise‑affine regularizer (PAR)** with efficient proximal operators and built‑in quantization utilities.
 
