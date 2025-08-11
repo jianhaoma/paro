@@ -4,7 +4,7 @@ from algo_options import parse_args
 def sigmoid(z):
     return 1 / (1 + np.exp(-z))
 
-def rand_model(n, d, disAxz, Ascale, xscale, zscale, seed):
+def rand_model(n, d, disAxz, Ascale=1.0, xscale=1.0, zscale=1.0, seed=42):
     '''
     Generate random model b = A * x + z
     Inputs:

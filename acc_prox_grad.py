@@ -3,11 +3,11 @@ from algo_options import parse_args
 from solution_logger import SolutionLogger
 
 
-def prox_grad(f, R, lambda_, x0, L0, tol):
+def acc_prox_grad(f, R, lambda_, x0, L0, tol):
     args = parse_args()
 
     # create logger to store solution history
-    logger = SolutionLogger("PG", x0, L0)
+    logger = SolutionLogger("acc_PG", x0, L0)
 
     # initialization
     x = x0
@@ -16,6 +16,7 @@ def prox_grad(f, R, lambda_, x0, L0, tol):
 
     # for optimality test in the first iteration, use fake gradient mapping
     gMx = np.ones_like(x) * 1e10
+    x_prev = x.copy()
 
     fx = f.func(x)
     for k in range(args.max_iters):
@@ -52,21 +53,25 @@ def prox_grad(f, R, lambda_, x0, L0, tol):
             logger.status = "O"
             break
 
+        v = x + (k-2) / (k+1) * (x - x_prev)
+        fv = f.func(v)
+        gv = f.grad(v)
         # compute next iterate with or without line search
         if args.line_search:
-            x1, M, gMx, fx1 = line_search(f, R, lambda_, x, fx, gx, L, args)
+            x1, M, gMx, fx1 = line_search(f, R, lambda_, v, fv, gv, L, args)
 
             # reduce Lipschitz constant by fixed factor if possible
             L = max(args.Lipsc_min, M / args.gamma_dec)
         else:
             # Assuming args.diagonalB is not provided
-            diagonalB = np.ones_like(x)
-            x1 = R.scaled_prox_mapping(L * diagonalB, x, gx, lambda_)
+            diagonalB = np.ones_like(v)
+            x1 = R.scaled_prox_mapping(L * diagonalB, v, gv, lambda_)
             fx1 = f.func(x1)
             dx = x1 - x
             gMx = L * (diagonalB * dx)
 
         # update solution
+        x_prev = x.copy()
         x = x1
         fx = fx1
 

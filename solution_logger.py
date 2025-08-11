@@ -2,11 +2,11 @@ import numpy as np
 
 
 class SolutionLogger:
-    '''
-    a logger class to record values of all iterates in an iterative algorithm
+    """
+    A logger class to record values of all iterates in an iterative algorithm
 
     Properties:
-        status: 'U':Unknown, 'O':Optimal, 'L':LineSearchFailure, 'M':MaxIterReached
+        status: 'U':Unknown, 'O':Optimal, 'M':MaxIterReached
         algo_name: name of algorithm that generated this logger
         x:      final solution
         M:      local Lipschitz constant from line search at final solution x
@@ -21,12 +21,12 @@ class SolutionLogger:
         res_all: optimality residues at all iterates
         idx_all: vector of indices for plotting
         nAx_all: numbers of matrix-vector multiplications
-    '''
+    """
 
     def __init__(self, algo_name, x0, L0, x_gen=None):
         self.verbose = False
         self.x_gen = x_gen if x_gen is not None else []
-        self.status = 'U'
+        self.status = "U"
         self.algo_name = algo_name
         self.x = x0
         self.M = L0
@@ -41,16 +41,18 @@ class SolutionLogger:
         self.res_all = []
         self.idx_all = []
         self.nAx_all = []
-        self.quantization_ratio_all = []
+        self.quantization_rate_all = []
         self.quantized_fx_all = []
 
     def assign_name(self, name):
         self.algo_name = name
 
-    def record(self, k, f, x, fx, Rx, Fx, M, residue, quantized_fx=-1e8, quantization_ratio=0.0):
+    def record(
+        self, k, f, x, fx, Rx, Fx, M, residue, quantized_fx=0.0, quantization_rate=0.0
+    ):
         self.fx_all.append(fx)
         self.quantized_fx_all.append(quantized_fx)
-        self.quantization_ratio_all.append(quantization_ratio)
+        self.quantization_rate_all.append(quantization_rate)
         self.Rx_all.append(Rx)
         self.Fx_all.append(Fx)
         self.Lf_all.append(M)
@@ -64,14 +66,14 @@ class SolutionLogger:
         self.x = x
         self.M = M
         self.lambdas.append(lambda_)
-        self.n_iters.append(k - 1)
+        self.n_iters.append(k)
 
     def concatenate(self, nextlog):
         self.status = nextlog.status
         self.x = nextlog.x
         self.M = nextlog.M
         self.fx_all.extend(nextlog.fx_all)
-        self.quantization_ratio_all.extend(nextlog.quantization_ratio_all)
+        self.quantization_rate_all.extend(nextlog.quantization_rate_all)
         self.Rx_all.extend(nextlog.Rx_all)
         self.Fx_all.extend(nextlog.Fx_all)
         self.Lf_all.extend(nextlog.Lf_all)
